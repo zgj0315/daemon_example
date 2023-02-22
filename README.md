@@ -1,2 +1,2 @@
 # daemon_example
-A daemon example
+An example of daemon project.
