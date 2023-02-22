@@ -7,6 +7,6 @@ fn main() {
     log::info!("app b start");
     loop {
         log::info!("app b running");
-        sleep(Duration::from_secs(3));
+        sleep(Duration::from_secs(1));
     }
 }
