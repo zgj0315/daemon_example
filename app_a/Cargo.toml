@@ -1,0 +1,8 @@
+[package]
+edition = "2021"
+name = "app_a"
+version = "0.1.0"
+
+[dependencies]
+dev_util = "0.1"
+log = "0.4"
