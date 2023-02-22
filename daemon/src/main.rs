@@ -1,4 +1,4 @@
-use std::{env, fs, process::Command};
+use std::{env, process::Command};
 
 use dev_util::log::log_init;
 use tokio::sync::mpsc::{channel, Sender};
@@ -6,24 +6,21 @@ use tokio::sync::mpsc::{channel, Sender};
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     log_init();
-    log::info!("daemon start");
-    let current_dir = env::current_dir().unwrap();
-    for entry in fs::read_dir(current_dir).unwrap() {
-        let path = entry.unwrap().path();
-        let metadata = fs::metadata(&path).unwrap();
-        log::info!("path: {:?}, premissons: {:?}", path, metadata.permissions());
+    let args: Vec<String> = env::args().collect();
+    if args.len() <= 1 {
+        log::error!("input error, eg: ./daemon ./app_a ./app_b");
+        return Ok(());
     }
+    log::info!("daemon start");
     let (tx, mut rx) = channel(1);
-    let cmds = [
-        "target/debug/app_a",
-        "target/debug/app_b",
-        // "target/debug/app_c",
-    ];
-
-    for cmd in cmds {
+    'args_for: for (i, cmd) in args.iter().enumerate() {
+        if i == 0 {
+            continue 'args_for;
+        }
+        let cmd = cmd.clone();
         let tx = tx.clone();
         tokio::spawn(async move {
-            app(cmd, tx).await;
+            app(&cmd, tx).await;
         });
     }
     drop(tx);
