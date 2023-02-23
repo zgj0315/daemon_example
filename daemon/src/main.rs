@@ -30,7 +30,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-async fn app(cmd: &str, _tx: Sender<&str>) {
+async fn app(cmd: &str, _tx: Sender<()>) {
     loop {
         log::info!("app {} start", cmd);
         let mut app_child = Command::new(cmd).spawn().expect("failed to execute");
